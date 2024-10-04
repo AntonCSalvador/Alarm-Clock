@@ -7,6 +7,7 @@ import AlarmClock from '../components/AlarmClock';
 import AlarmCard from '../components/AlarmCard';
 import { Alarm } from '../types/AlarmTypes';
 import * as Notifications from 'expo-notifications'; // For Notifications.cancelScheduledNotificationAsync
+import axios from 'axios';
 
 import { useDarkMode } from '../contexts/DarkModeContext'; // Import the hook
 
@@ -21,6 +22,26 @@ export default function Alarms() {
     backgroundColor: isDarkMode ? 'darkgrey' : 'white',
     color: isDarkMode ? 'white' : 'black',
   };
+
+  const sendSMS = async (toPhoneNumber: string, message: string) => {
+    try {
+      await axios.post('localhost:8080/send-sms', {
+        to: toPhoneNumber,
+        message: message,
+      });
+      console.log('SMS sent successfully');
+    } catch (error) {
+      console.error('Error sending SMS:', error);
+    }
+  };
+  
+
+  const handleAlarmTrigger = (alarm: Alarm) => {
+  
+    // Send SMS notification, currently sends to Kaniel's number lol
+    sendSMS('813-509-9101', 'Wake up! Its the first of the month!');
+  };
+  
 
   // Function to handle saving alarm data
   const handleSaveAlarm = (alarmData: Alarm) => {
